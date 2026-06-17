@@ -58,7 +58,7 @@ function Tooth({ size = 24, strokeWidth = 2, ...props }) {
 function LogoMark({ className = "logo-mark", showText = true }) {
   return (
     <span className={className}>
-      <img className="background-color=red" src="/bg-reddy-icon.png" alt="BG Reddy Dental Clinic logo" />
+      <img src="/bg-reddy-icon.png" alt="BG Reddy Dental Clinic logo" />
       {showText && (
         <span className="logo-copy">
           <strong>Sri B.G Reddy</strong>
@@ -219,7 +219,7 @@ function Hero({ scrollToSection, setCurrentPage }) {
               Premium Clinic Website
             </div>
             <div className="showcase-logo-stage">
-              <img className="border-radius=30" src="/bg-reddy-icon.png" alt="BG Reddy Dental Clinic icon" />
+              <img src="/bg-reddy-icon.png" alt="BG Reddy Dental Clinic icon" />
             </div>
             <div className="showcase-title">
               <span>BG Reddy Dental Clinic</span>

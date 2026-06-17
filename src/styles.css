@@ -747,3 +747,430 @@ input:focus, select:focus, textarea:focus { border-color: var(--blue-500); box-s
   .showcase-title strong { font-size: 24px; }
   .floating-card { position: relative; left: auto; right: auto; top: auto; bottom: auto; margin: 14px auto 0; }
 }
+
+/* Mobile presentation upgrade — compact premium healthcare layout */
+@media (max-width: 760px) {
+  :root {
+    --radius: 22px;
+  }
+
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .container,
+  .nav-wrap {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .site-header {
+    background: rgba(255,255,255,.94);
+  }
+
+  .nav-wrap {
+    min-height: 68px;
+    gap: 10px;
+  }
+
+  .brand,
+  .logo-mark {
+    min-width: 0;
+  }
+
+  .logo-mark > img,
+  .brand-mark {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px;
+    border-radius: 14px;
+  }
+
+  .brand strong,
+  .logo-copy strong {
+    font-size: 14px;
+    max-width: 178px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .brand small,
+  .logo-copy small {
+    display: none !important;
+  }
+
+  .nav-actions {
+    gap: 8px;
+  }
+
+  .call-pill {
+    min-height: 40px;
+    padding: 0 12px;
+    font-size: 0;
+  }
+
+  .call-pill svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .menu-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+  }
+
+  .nav-menu {
+    top: 76px;
+    left: 14px;
+    right: 14px;
+    border-radius: 20px;
+  }
+
+  .nav-menu button {
+    padding: 14px 14px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .hero-section {
+    padding: 34px 0 34px;
+    background:
+      radial-gradient(circle at 80% 4%, rgba(10,99,199,.17), transparent 28%),
+      linear-gradient(180deg, #f8fcff 0%, #fff 100%);
+  }
+
+  .orb {
+    display: none;
+  }
+
+  .hero-grid,
+  .about-grid,
+  .equipment-grid,
+  .appointment-grid,
+  .login-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px;
+  }
+
+  .eyebrow {
+    padding: 8px 11px;
+    font-size: 12px;
+    line-height: 1.2;
+    max-width: 100%;
+  }
+
+  .hero-copy h1,
+  .login-copy h1 {
+    margin: 16px 0 14px;
+    font-size: clamp(36px, 11.5vw, 46px) !important;
+    line-height: 1.02;
+    letter-spacing: -0.055em;
+  }
+
+  .hero-subtitle,
+  .section-text,
+  .section-head p,
+  .login-copy p {
+    font-size: 15.5px;
+    line-height: 1.68;
+  }
+
+  .hero-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .primary-button,
+  .secondary-button,
+  .submit-button,
+  .white-button,
+  .outline-white-button {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 16px;
+    border-radius: 16px;
+    font-size: 15px;
+  }
+
+  .hero-address-card {
+    border-radius: 18px;
+    padding: 13px;
+    font-size: 14px;
+  }
+
+  .hero-visual,
+  .enterprise-visual {
+    min-height: auto !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .glass-card,
+  .floating-card,
+  .appointment-mini-card,
+  .quality-mini-card {
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 18px;
+    padding: 13px;
+  }
+
+  .main-clinic-card,
+  .brand-showcase-card {
+    width: 100%;
+    border-radius: 26px !important;
+    padding: 18px !important;
+    box-shadow: 0 20px 55px rgba(6,69,142,.13);
+  }
+
+  .main-clinic-card::before,
+  .brand-showcase-card::before {
+    display: none;
+  }
+
+  .clinic-card-header {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 13px;
+    margin-bottom: 16px;
+  }
+
+  .doctor-avatar {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    border-radius: 20px;
+  }
+
+  .doctor-avatar svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .clinic-card-header h3 {
+    font-size: 20px;
+  }
+
+  .clinic-card-header span {
+    font-size: 11px;
+  }
+
+  .rating-panel {
+    padding: 14px;
+    border-radius: 18px;
+    gap: 12px;
+  }
+
+  .rating-panel > strong {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+    border-radius: 18px;
+    font-size: 23px;
+  }
+
+  .hero-metric-grid,
+  .enterprise-metrics,
+  .review-stats,
+  .trust-grid,
+  .services-grid,
+  .gallery-grid,
+  .testimonials-grid,
+  .footer-grid,
+  .form-row.two,
+  .split-card,
+  .quality-grid,
+  .equipment-list {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  .hero-metric-grid div,
+  .enterprise-metrics div,
+  .trust-grid div,
+  .review-stats div {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .trust-strip {
+    padding: 14px 0;
+  }
+
+  .section {
+    padding: 52px 0 !important;
+  }
+
+  .section-head {
+    text-align: left;
+    margin: 0 0 24px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    margin-bottom: 9px;
+  }
+
+  h2 {
+    font-size: clamp(28px, 8.4vw, 36px) !important;
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+  }
+
+  .service-card,
+  .testimonial-card,
+  .quality-card,
+  .appointment-form,
+  .login-panel,
+  .contact-card,
+  .about-card,
+  .equipment-card {
+    border-radius: 22px !important;
+    padding: 18px !important;
+  }
+
+  .service-card:hover,
+  .testimonial-card:hover,
+  .quality-card:hover {
+    transform: none;
+  }
+
+  .service-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+  }
+
+  .gallery-card,
+  .gallery-card img {
+    height: 215px !important;
+    min-height: 215px !important;
+    border-radius: 22px;
+  }
+
+  .gallery-overlay {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .review-chip-grid {
+    gap: 8px;
+  }
+
+  .review-chip-grid span {
+    font-size: 12px;
+    padding: 9px 11px;
+  }
+
+  .testimonial-card p {
+    font-size: 14.5px;
+    line-height: 1.62;
+  }
+
+  .appointment-form input,
+  .appointment-form textarea,
+  .appointment-form select,
+  .login-panel input,
+  .login-panel select {
+    min-height: 48px;
+    border-radius: 14px;
+    font-size: 15px;
+  }
+
+  .contact-card {
+    text-align: left;
+  }
+
+  .contact-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .footer {
+    padding: 32px 0 90px;
+  }
+
+  .footer-grid {
+    text-align: left;
+  }
+
+  .showcase-topline {
+    font-size: 10.5px;
+    padding: 8px 10px;
+    letter-spacing: .08em;
+  }
+
+  .showcase-logo-stage {
+    width: min(230px, 68vw) !important;
+    border-radius: 26px !important;
+    margin: 18px auto 16px;
+  }
+
+  .showcase-logo-stage img {
+    width: 88%;
+    height: 88%;
+  }
+
+  .showcase-title strong {
+    font-size: 21px !important;
+  }
+
+  .showcase-title span {
+    font-size: 13px;
+  }
+
+  .modal-backdrop {
+    padding: 12px;
+  }
+
+  .modal-card {
+    border-radius: 22px;
+  }
+
+  .modal-card img {
+    height: 52vh;
+  }
+
+  .modal-close {
+    top: 14px;
+    right: 14px;
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (max-width: 390px) {
+  .brand strong,
+  .logo-copy strong {
+    max-width: 142px;
+    font-size: 13px;
+  }
+
+  .hero-copy h1,
+  .login-copy h1 {
+    font-size: 34px !important;
+  }
+
+  .hero-subtitle,
+  .section-text,
+  .section-head p,
+  .login-copy p {
+    font-size: 14.5px;
+  }
+}
