@@ -1,0 +1,77 @@
+/* PageSpeed-focused overrides: reduce expensive paint work, keep layout stable, and improve keyboard access. */
+:focus-visible {
+  outline: 3px solid rgba(10, 99, 199, 0.45);
+  outline-offset: 3px;
+}
+
+.logo-mark > img,
+.login-logo-mini img,
+.footer-logo img,
+.showcase-logo-stage img,
+.equipment-visual-card img,
+.gallery-card img,
+.modal-card img {
+  content-visibility: auto;
+}
+
+.site-header,
+.equipment-badge,
+.floating-card,
+.enterprise-metrics div,
+.modal-backdrop,
+.glass-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.orb,
+.login-bg-orb {
+  filter: none !important;
+}
+
+.service-card,
+.testimonial-card,
+.gallery-card,
+.quality-card,
+.appointment-form,
+.login-panel,
+.contact-card,
+.primary-button,
+.submit-button {
+  will-change: auto;
+}
+
+.gallery-card img,
+.equipment-visual-card img,
+.showcase-logo-stage img {
+  background: var(--blue-50);
+}
+
+.deferred-page-sections {
+  contain: layout paint style;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-section {
+    padding-top: 38px !important;
+  }
+
+  .showcase-logo-stage {
+    width: min(220px, 70vw) !important;
+  }
+
+  .brand-showcase-card {
+    box-shadow: 0 18px 48px rgba(6, 69, 142, 0.13) !important;
+  }
+}
