@@ -7,7 +7,6 @@ import {
   Camera,
   CheckCircle2,
   ChevronRight,
-  Clock,
   Eye,
   EyeOff,
   HeartPulse,
@@ -19,7 +18,6 @@ import {
   ShieldCheck,
   Sparkles,
   Star,
-  Stethoscope,
   Syringe,
   UserRound,
   UsersRound,
@@ -35,6 +33,8 @@ import {
 } from "./data/clinic.js";
 import { loginToDms, submitAppointment } from "./lib/dmsApi.js";
 
+const LOGO_SRC = "/logo.svg";
+
 function Tooth({ size = 24, strokeWidth = 2, ...props }) {
   return (
     <svg
@@ -47,6 +47,7 @@ function Tooth({ size = 24, strokeWidth = 2, ...props }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
+      focusable="false"
       {...props}
     >
       <path d="M7.4 3.2c1.25-.45 2.6.08 3.55.86.62.5 1.48.5 2.1 0 .95-.78 2.3-1.31 3.55-.86 2.15.78 3.14 3.36 2.35 6.12-.54 1.9-1.5 3.08-2.14 4.85-.52 1.42-.67 3.24-1.1 4.75-.32 1.12-.94 2.08-1.96 2.08-.92 0-1.28-.82-1.56-1.95-.26-1.05-.48-2.47-1.19-2.47s-.93 1.42-1.19 2.47C9.53 20.18 9.17 21 8.25 21c-1.02 0-1.64-.96-1.96-2.08-.43-1.51-.58-3.33-1.1-4.75-.64-1.77-1.6-2.95-2.14-4.85-.79-2.76.2-5.34 2.35-6.12Z" />
@@ -55,10 +56,18 @@ function Tooth({ size = 24, strokeWidth = 2, ...props }) {
   );
 }
 
-function LogoMark({ className = "logo-mark", showText = true }) {
+function LogoMark({ className = "logo-mark", showText = true, eager = false }) {
   return (
     <span className={className}>
-      <img src="/bg-reddy-icon.png" alt="BG Reddy Dental Clinic logo" />
+      <img
+        src={LOGO_SRC}
+        alt="Sri B.G Reddy Dental Clinic logo"
+        width="128"
+        height="128"
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+        fetchPriority={eager ? "high" : "auto"}
+      />
       {showText && (
         <span className="logo-copy">
           <strong>Sri B.G Reddy</strong>
@@ -89,7 +98,7 @@ function Stars({ count = 5 }) {
   return (
     <div className="stars" aria-label={`${count} star review`}>
       {Array.from({ length: count }).map((_, index) => (
-        <Star key={index} size={16} fill="currentColor" />
+        <Star key={index} size={16} fill="currentColor" aria-hidden="true" focusable="false" />
       ))}
     </div>
   );
@@ -103,7 +112,7 @@ function App() {
   const scrollToSection = (id) => {
     setCurrentPage("home");
     setMenuOpen(false);
-    setTimeout(() => {
+    window.setTimeout(() => {
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 80);
   };
@@ -124,13 +133,15 @@ function App() {
         <main>
           <Hero scrollToSection={scrollToSection} setCurrentPage={setCurrentPage} />
           <TrustBar />
-          <About />
-          <Services />
-          <Equipment />
-          <Gallery setActiveImage={setActiveImage} />
-          <Reviews />
-          <Appointment />
-          <Contact />
+          <div className="deferred-page-sections">
+            <About />
+            <Services />
+            <Equipment />
+            <Gallery setActiveImage={setActiveImage} />
+            <Reviews />
+            <Appointment />
+            <Contact />
+          </div>
         </main>
       )}
 
@@ -140,33 +151,40 @@ function App() {
   );
 }
 
-function Header({ menuOpen, setMenuOpen, currentPage, setCurrentPage, scrollToSection }) {
+function Header({ menuOpen, setMenuOpen, setCurrentPage, scrollToSection }) {
   return (
     <header className="site-header">
       <div className="nav-wrap">
         <button className="brand brand-with-real-logo" onClick={() => setCurrentPage("home")} aria-label="Go to home">
-          <LogoMark />
+          <LogoMark eager />
         </button>
 
-        <nav className={menuOpen ? "nav-menu open" : "nav-menu"}>
+        <nav id="primary-navigation" className={menuOpen ? "nav-menu open" : "nav-menu"} aria-label="Main navigation">
           {navItems.map(([label, id]) => (
-            <button key={id} onClick={() => scrollToSection(id)}>
+            <button key={id} onClick={() => scrollToSection(id)} type="button">
               {label}
             </button>
           ))}
         </nav>
 
         <div className="nav-actions">
-          <button className="login-pill" onClick={() => setCurrentPage("login")}>
-            <LockKeyhole size={16} />
+          <button className="login-pill" onClick={() => setCurrentPage("login")} type="button" aria-label="Open clinic login">
+            <LockKeyhole size={16} aria-hidden="true" />
             Clinic Login
           </button>
-          <a className="call-pill" href={`tel:${clinic.phone}`}>
-            <Phone size={16} />
+          <a className="call-pill" href={`tel:${clinic.phone}`} aria-label={`Call ${clinic.name}`}>
+            <Phone size={16} aria-hidden="true" />
             Call
           </a>
-          <button className="menu-toggle" onClick={() => setMenuOpen((value) => !value)}>
-            {menuOpen ? <X /> : <Menu />}
+          <button
+            className="menu-toggle"
+            onClick={() => setMenuOpen((value) => !value)}
+            type="button"
+            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={menuOpen}
+            aria-controls="primary-navigation"
+          >
+            {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
           </button>
         </div>
       </div>
@@ -177,12 +195,12 @@ function Header({ menuOpen, setMenuOpen, currentPage, setCurrentPage, scrollToSe
 function Hero({ scrollToSection, setCurrentPage }) {
   return (
     <section className="hero-section" id="home">
-      <div className="orb orb-one" />
-      <div className="orb orb-two" />
+      <div className="orb orb-one" aria-hidden="true" />
+      <div className="orb orb-two" aria-hidden="true" />
       <div className="container hero-grid">
         <div className="hero-copy">
           <div className="eyebrow">
-            <BadgeCheck size={17} />
+            <BadgeCheck size={17} aria-hidden="true" />
             {clinic.rating} Google Rating • {clinic.reviewsCount} Reviews
           </div>
           <h1>
@@ -193,18 +211,18 @@ function Hero({ scrollToSection, setCurrentPage }) {
           </p>
 
           <div className="hero-buttons">
-            <button className="primary-button" onClick={() => scrollToSection("appointment")}>
-              <CalendarCheck size={19} />
+            <button className="primary-button" onClick={() => scrollToSection("appointment")} type="button">
+              <CalendarCheck size={19} aria-hidden="true" />
               Book Appointment
             </button>
-            <button className="secondary-button" onClick={() => setCurrentPage("login")}>
-              <LockKeyhole size={18} />
+            <button className="secondary-button" onClick={() => setCurrentPage("login")} type="button">
+              <LockKeyhole size={18} aria-hidden="true" />
               Clinic Login
             </button>
           </div>
 
           <div className="hero-address-card">
-            <MapPin size={22} />
+            <MapPin size={22} aria-hidden="true" />
             <div>
               <strong>{clinic.shortLocation}</strong>
               <span>{clinic.address}</span>
@@ -215,11 +233,11 @@ function Hero({ scrollToSection, setCurrentPage }) {
         <div className="hero-visual enterprise-visual">
           <div className="brand-showcase-card">
             <div className="showcase-topline">
-              <span className="live-dot" />
+              <span className="live-dot" aria-hidden="true" />
               Premium Clinic Website
             </div>
             <div className="showcase-logo-stage">
-              <img src="/bg-reddy-icon.png" alt="BG Reddy Dental Clinic icon" />
+              <img src={LOGO_SRC} alt="Sri B.G Reddy Dental Clinic icon" width="128" height="128" loading="eager" decoding="async" fetchPriority="high" />
             </div>
             <div className="showcase-title">
               <span>BG Reddy Dental Clinic</span>
@@ -236,7 +254,7 @@ function Hero({ scrollToSection, setCurrentPage }) {
           </div>
 
           <div className="floating-card appointment-mini-card">
-            <CalendarCheck size={24} />
+            <CalendarCheck size={24} aria-hidden="true" />
             <div>
               <strong>Appointment ready</strong>
               <small>Website booking flow prepared for DMS connection.</small>
@@ -244,7 +262,7 @@ function Hero({ scrollToSection, setCurrentPage }) {
           </div>
 
           <div className="floating-card quality-mini-card">
-            <ShieldCheck size={28} />
+            <ShieldCheck size={28} aria-hidden="true" />
             <div>
               <strong>Equipment showcase</strong>
               <small>Built to highlight advanced clinic investment.</small>
@@ -257,16 +275,19 @@ function Hero({ scrollToSection, setCurrentPage }) {
 }
 
 function TrustBar() {
+  const icons = [Tooth, ShieldCheck, HeartPulse, Sparkles];
   return (
-    <section className="trust-strip">
+    <section className="trust-strip" aria-label="Clinic highlights">
       <div className="container trust-grid">
-        {reviewThemes.slice(0, 4).map((theme, index) => (
-          <div key={theme} className="trust-item">
-            {[Tooth, ShieldCheck, HeartPulse, Sparkles][index] &&
-              React.createElement([Tooth, ShieldCheck, HeartPulse, Sparkles][index], { size: 22 })}
-            <span>{theme}</span>
-          </div>
-        ))}
+        {reviewThemes.slice(0, 4).map((theme, index) => {
+          const Icon = icons[index];
+          return (
+            <div key={theme} className="trust-item">
+              <Icon size={22} aria-hidden="true" />
+              <span>{theme}</span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -287,29 +308,29 @@ function About() {
           </p>
           <div className="about-actions">
             <a href={clinic.mapsUrl} target="_blank" rel="noreferrer" className="text-link">
-              Open Google Maps <ArrowRight size={16} />
+              Open Google Maps <ArrowRight size={16} aria-hidden="true" />
             </a>
           </div>
         </div>
 
         <div className="quality-card-stack">
           <div className="quality-card large">
-            <Microscope size={34} />
+            <Microscope size={34} aria-hidden="true" />
             <strong>Modern treatment focus</strong>
             <p>Modern equipment, sterilization workflow, treatment rooms and premium clinical infrastructure support quality-focused care.</p>
           </div>
           <div className="quality-card split-card">
             <div>
-              <Activity size={28} />
+              <Activity size={28} aria-hidden="true" />
               <strong>Clinical care</strong>
             </div>
             <div>
-              <UsersRound size={28} />
+              <UsersRound size={28} aria-hidden="true" />
               <strong>Family trust</strong>
             </div>
           </div>
           <div className="quality-card large pale">
-            <Syringe size={34} />
+            <Syringe size={34} aria-hidden="true" />
             <strong>Comfort-first care</strong>
             <p>Patients repeatedly mention patience, painless treatment and good explanation in reviews.</p>
           </div>
@@ -336,13 +357,13 @@ function Services() {
             return (
               <article className="service-card" key={service.title}>
                 <div className="service-top">
-                  <span className="service-icon"><Icon size={26} /></span>
+                  <span className="service-icon"><Icon size={26} aria-hidden="true" /></span>
                   <span className="service-short">{service.short}</span>
                 </div>
                 <h3>{service.title}</h3>
                 <p>{service.description}</p>
-                <button onClick={() => document.getElementById("appointment")?.scrollIntoView({ behavior: "smooth" })}>
-                  Book for this <ChevronRight size={16} />
+                <button onClick={() => document.getElementById("appointment")?.scrollIntoView({ behavior: "smooth" })} type="button" aria-label={`Book appointment for ${service.title}`}>
+                  Book for this <ChevronRight size={16} aria-hidden="true" />
                 </button>
               </article>
             );
@@ -358,9 +379,9 @@ function Equipment() {
     <section id="equipment" className="section equipment-section">
       <div className="container equipment-grid">
         <div className="equipment-visual-card">
-          <img src="/gallery/equipment.svg" alt="Dental equipment showcase" />
+          <img src="/gallery/equipment.svg" alt="Dental equipment showcase" width="720" height="520" loading="lazy" decoding="async" />
           <div className="equipment-badge">
-            <ShieldCheck size={24} />
+            <ShieldCheck size={24} aria-hidden="true" />
             <span>Quality-first clinic setup</span>
           </div>
         </div>
@@ -375,7 +396,7 @@ function Equipment() {
           <div className="equipment-list">
             {equipmentHighlights.map((item) => (
               <div key={item.title}>
-                <CheckCircle2 size={22} />
+                <CheckCircle2 size={22} aria-hidden="true" />
                 <span>
                   <strong>{item.title}</strong>
                   <small>{item.description}</small>
@@ -401,11 +422,11 @@ function Gallery({ setActiveImage }) {
 
         <div className="gallery-grid">
           {gallery.map((item) => (
-            <button className="gallery-card" key={item.title} onClick={() => setActiveImage(item)}>
-              <img src={item.image} alt={item.title} />
+            <button className="gallery-card" key={item.title} onClick={() => setActiveImage(item)} type="button" aria-label={`View ${item.title} gallery image`}>
+              <img src={item.image} alt={item.title} width="520" height="285" loading="lazy" decoding="async" />
               <span>{item.category}</span>
               <strong>{item.title}</strong>
-              <div className="gallery-hover">
+              <div className="gallery-hover" aria-hidden="true">
                 <Camera size={24} />
                 View
               </div>
@@ -511,21 +532,21 @@ function Appointment() {
           </div>
         </div>
 
-        <form className="appointment-form" onSubmit={handleSubmit}>
+        <form className="appointment-form" onSubmit={handleSubmit} aria-label="Appointment request form">
           <div className="form-row two">
-            <label>
+            <label htmlFor="patient-name">
               Patient Name
-              <input value={form.name} onChange={(e) => updateField("name", e.target.value)} placeholder="Enter full name" />
+              <input id="patient-name" name="patientName" value={form.name} onChange={(e) => updateField("name", e.target.value)} placeholder="Enter full name" autoComplete="name" />
             </label>
-            <label>
+            <label htmlFor="patient-phone">
               Phone Number
-              <input value={form.phone} onChange={(e) => updateField("phone", e.target.value)} placeholder="Enter mobile number" />
+              <input id="patient-phone" name="phone" type="tel" value={form.phone} onChange={(e) => updateField("phone", e.target.value)} placeholder="Enter mobile number" autoComplete="tel" inputMode="tel" />
             </label>
           </div>
 
-          <label>
+          <label htmlFor="treatment-needed">
             Treatment Needed
-            <select value={form.treatment} onChange={(e) => updateField("treatment", e.target.value)}>
+            <select id="treatment-needed" name="treatment" value={form.treatment} onChange={(e) => updateField("treatment", e.target.value)}>
               {services.map((service) => <option key={service.title}>{service.title}</option>)}
               <option>General Dental Checkup</option>
               <option>Emergency Dental Pain</option>
@@ -533,25 +554,25 @@ function Appointment() {
           </label>
 
           <div className="form-row two">
-            <label>
+            <label htmlFor="preferred-date">
               Preferred Date
-              <input type="date" value={form.preferredDate} onChange={(e) => updateField("preferredDate", e.target.value)} />
+              <input id="preferred-date" name="preferredDate" type="date" value={form.preferredDate} onChange={(e) => updateField("preferredDate", e.target.value)} />
             </label>
-            <label>
+            <label htmlFor="preferred-time">
               Preferred Time
-              <input type="time" value={form.preferredTime} onChange={(e) => updateField("preferredTime", e.target.value)} />
+              <input id="preferred-time" name="preferredTime" type="time" value={form.preferredTime} onChange={(e) => updateField("preferredTime", e.target.value)} />
             </label>
           </div>
 
-          <label>
+          <label htmlFor="appointment-notes">
             Notes
-            <textarea value={form.notes} onChange={(e) => updateField("notes", e.target.value)} placeholder="Tooth pain, RCT follow-up, cap issue, cleaning, etc." />
+            <textarea id="appointment-notes" name="notes" value={form.notes} onChange={(e) => updateField("notes", e.target.value)} placeholder="Tooth pain, RCT follow-up, cap issue, cleaning, etc." />
           </label>
 
           <button className="submit-button" type="submit">
-            Submit Appointment Request <ArrowRight size={18} />
+            Submit Appointment Request <ArrowRight size={18} aria-hidden="true" />
           </button>
-          {message && <p className="form-message">{message}</p>}
+          {message && <p className="form-message" role="status">{message}</p>}
         </form>
       </div>
     </section>
@@ -568,8 +589,8 @@ function Contact() {
           <p>{clinic.address}</p>
         </div>
         <div className="contact-actions">
-          <a href={`tel:${clinic.phone}`} className="white-button"><Phone size={18} /> Call Clinic</a>
-          <a href={clinic.mapsUrl} target="_blank" rel="noreferrer" className="outline-white-button"><MapPin size={18} /> Directions</a>
+          <a href={`tel:${clinic.phone}`} className="white-button"><Phone size={18} aria-hidden="true" /> Call Clinic</a>
+          <a href={clinic.mapsUrl} target="_blank" rel="noreferrer" className="outline-white-button"><MapPin size={18} aria-hidden="true" /> Directions</a>
         </div>
       </div>
     </section>
@@ -603,11 +624,11 @@ function LoginPage({ setCurrentPage }) {
 
   return (
     <main className="login-page">
-      <div className="login-bg-orb one" />
-      <div className="login-bg-orb two" />
+      <div className="login-bg-orb one" aria-hidden="true" />
+      <div className="login-bg-orb two" aria-hidden="true" />
       <div className="container login-grid">
         <section className="login-copy">
-          <button className="back-button" onClick={() => setCurrentPage("home")}>
+          <button className="back-button" onClick={() => setCurrentPage("home")} type="button">
             ← Back to Website
           </button>
           <p className="section-label">Clinic Login</p>
@@ -616,13 +637,14 @@ function LoginPage({ setCurrentPage }) {
             Authorized clinic staff can access role-based workflows for doctor, reception and head-office operations.
           </p>
 
-          <div className="login-role-grid">
+          <div className="login-role-grid" role="group" aria-label="Choose staff role">
             {roleCards.map((card) => (
               <button
                 key={card.title}
                 className={role === card.title ? "role-card active" : "role-card"}
                 onClick={() => setRole(card.title)}
                 type="button"
+                aria-pressed={role === card.title}
               >
                 <strong>{card.title}</strong>
                 <span>{card.text}</span>
@@ -633,45 +655,51 @@ function LoginPage({ setCurrentPage }) {
 
         <section className="login-panel">
           <div className="login-panel-head">
-            <LogoMark className="login-logo-mini" showText={false} />
+            <LogoMark className="login-logo-mini" showText={false} eager />
             <div>
               <strong>{clinic.name}</strong>
               <span>{role} Login</span>
             </div>
           </div>
 
-          <form onSubmit={handleLogin}>
-            <label>
+          <form onSubmit={handleLogin} aria-label={`${role} login form`}>
+            <label htmlFor="login-email">
               Email / Mobile
               <input
+                id="login-email"
+                name="email"
                 value={form.email}
                 onChange={(e) => setForm((current) => ({ ...current, email: e.target.value }))}
                 placeholder="doctor@clinic.com"
+                autoComplete="username"
               />
             </label>
-            <label>
+            <label htmlFor="login-password">
               Password
               <div className="password-input">
                 <input
+                  id="login-password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   value={form.password}
                   onChange={(e) => setForm((current) => ({ ...current, password: e.target.value }))}
                   placeholder="Enter password"
+                  autoComplete="current-password"
                 />
-                <button type="button" onClick={() => setShowPassword((value) => !value)}>
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? "Hide password" : "Show password"}>
+                  {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
                 </button>
               </div>
             </label>
             <button className="submit-button" type="submit">
-              Continue to {role} Dashboard <ArrowRight size={18} />
+              Continue to {role} Dashboard <ArrowRight size={18} aria-hidden="true" />
             </button>
           </form>
 
-          {message && <p className="form-message login-message">{message}</p>}
+          {message && <p className="form-message login-message" role="status">{message}</p>}
 
           <div className="dms-note">
-            <LockKeyhole size={18} />
+            <LockKeyhole size={18} aria-hidden="true" />
             <span>Secure access for authorized clinic staff only.</span>
           </div>
         </section>
@@ -682,10 +710,10 @@ function LoginPage({ setCurrentPage }) {
 
 function GalleryModal({ item, onClose }) {
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <button className="modal-close" onClick={onClose}><X /></button>
-      <div className="modal-card" onClick={(event) => event.stopPropagation()}>
-        <img src={item.image} alt={item.title} />
+    <div className="modal-backdrop" onClick={onClose} role="presentation">
+      <button className="modal-close" onClick={onClose} type="button" aria-label="Close image preview"><X aria-hidden="true" /></button>
+      <div className="modal-card" onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-label={item.title}>
+        <img src={item.image} alt={item.title} width="920" height="540" loading="eager" decoding="async" />
         <div>
           <span>{item.category}</span>
           <h3>{item.title}</h3>
@@ -716,9 +744,9 @@ function Footer({ scrollToSection, setCurrentPage }) {
         </div>
         <div>
           <span>Quick Links</span>
-          <button onClick={() => scrollToSection("appointment")}>Book Appointment</button>
-          <button onClick={() => setCurrentPage("login")}>Clinic Login</button>
-          <button onClick={() => scrollToSection("gallery")}>Gallery</button>
+          <button onClick={() => scrollToSection("appointment")} type="button">Book Appointment</button>
+          <button onClick={() => setCurrentPage("login")} type="button">Clinic Login</button>
+          <button onClick={() => scrollToSection("gallery")} type="button">Gallery</button>
         </div>
         <div>
           <span>Contact</span>
